@@ -1,0 +1,374 @@
+swagger: '2.0'
+info:
+  description: "This is a simple Book App for web course"
+  version: 1.0.0
+  title: Book App
+  contact:
+    email: helly.luchina@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+- name: unauthorized users
+  description: "Operations for app users"
+- name: authorized users
+  description: "Privileged operations for app users"
+- name: admins
+  description: "Secured Admin-only calls"
+paths:
+  /login:
+    post:
+      tags:
+      - unauthorized users
+      description: "logs in the user"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: User
+        description: "user info to login"
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: vasya23@gmail.com
+            password:
+              type: string
+              format: password
+              example: qwerty12345
+      responses:
+        200:
+          description: "user is authorized"
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+        400:
+          description: "invalid login or password"
+  /users:
+    post:
+      tags:
+      - unauthorized users
+      description: "registers the new user"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: User
+        description: "user info to register"
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "user is authorized"
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+  /logout:
+    post:
+      tags:
+        - authorized users
+      description: "logs out the user"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: authorisation
+        type: string
+        required: true
+      responses:
+        201:
+          description: "user is logged out now"
+        500:
+          description: "server error"
+  /books:
+    get:
+      tags:
+      - unauthorized users
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: sort
+        type: string
+        description: "popular fisrt or alphabetically"
+      - in: query
+        name: theme
+        type: string
+        description: "theme name"
+      - in: query
+        name: filter
+        type: string
+        description: "author or name substring"
+      responses:
+        200:
+          description: "returns a list of books"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Book"
+        500:
+          description: "server error"
+    post:
+      tags:
+      - admins
+      description: "add a new book"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Book
+        description: "book info to register"
+        schema:
+          $ref: "#/definitions/Book"
+      responses:
+        200:
+          description: "book is added"
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+  /books/{bookidorcategory}:
+    get:
+      tags:
+        - unauthorized users
+      description: "show whole information about the book"
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: bookidorcategory
+        type: string
+        format: uuid
+        description: "book id"
+        required: true
+      responses:
+        200:
+          description: "return book information"
+          schema:
+            $ref: "#/definitions/Book"
+        404:
+          description: "book with that id is not found"
+        500:
+          description: "server error"
+    patch:
+      tags:
+      - admins
+      description: "change book info"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: bookidorcategory
+        type: string
+        format: uuid
+        description: "book id"
+        required: true
+      - in: body
+        name: Book
+        description: "book info to change"
+        schema:
+          $ref: "#/definitions/Book"
+      responses:
+        201:
+          description: "book information is updated"
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+    post:
+      tags:
+      - authorized users
+      description: "add book to category"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: authorisation
+        type: string
+        required: true
+      - in: path
+        name: bookidorcategory
+        type: string
+        description: "category name"
+        required: true
+      - in: body
+        name: bookid
+        description: "id of the book to add"
+        schema:
+          type: string
+          format: uuid
+      responses:
+        201:
+          description: "book added to category"
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+  /books/{category}/{id}:
+    delete:
+      tags:
+      - authorized users
+      description: "remove book from the category"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: authorisation
+        type: string
+        required: true
+      - in: path
+        name: category
+        type: string
+        description: "category name"
+        required: true
+      - in: path
+        name: id
+        description: "id of the book to remove"
+        type: string
+        format: uuid
+        required: true
+      responses:
+        201:
+          description: "book is removed from category"
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+  /books/{id}/rating:
+    post:
+      tags:
+      - authorized users
+      description: "give book a rating"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: authorisation
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: "id of the book to giva a rating to"
+        type: string
+        format: uuid
+        required: true
+      - in: body
+        name: rating
+        schema:
+          type: integer
+      responses:
+        201:
+          description: "rating was set"
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+    patch:
+      tags:
+      - authorized users
+      description: "give book a rating"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: authorisation
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: "id of the book to give a rating to"
+        type: string
+        format: uuid
+        required: true
+      - in: body
+        name: rating
+        schema:
+          type: integer
+      responses:
+        201:
+          description: "rating was changed"
+        400:
+          description: "invalid data"
+        500:
+          description: "server error"
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Vasya Pupkin
+      email:
+        type: string
+        format: email
+        example: vasya23@gmail.com
+      password:
+        type: string
+        format: password
+  Book:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      title:
+        type: string
+        example: Eugene Onegin
+      author:
+        type: string
+        example: Alexander Pushkin
+      theme:
+        type: string
+        example: novel
+      rating:
+        type: number
+        format: float
+        example: 4.7
+      annotation:
+        type: string
+        example: Eugene Onegin is the master work of the poet whom Russians regard as the fountainhead of their literature. Set in imperial Russia during the 1820s, Pushkin's novel in verse follows the emotions and destiny of three men - Onegin the bored fop, Lensky the minor elegiast, and a stylized Pushkin himself - and the fates and affections of three women - Tatyana the provincial beauty, her sister Olga, and Pushkin's mercurial Muse.
+
+host: bookapp.com
+basePath: /IamLena/BookApp/1.0.0
+schemes:
+ - https
+ - http
