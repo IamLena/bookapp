@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-
+const {sign} = require("jsonwebtoken");
 const Database = require('./database');
 
 class User {
@@ -32,7 +32,10 @@ exports.post = async (req, res) => {
 				const id = idresults[0].id;
 				const newuser = new User(id, name, email, password);
 				await db.query("INSERT into users SET ?", [newuser]);
-				res.status(200).json({jwt: "token"});
+				const jsontoken  = sign({}, process.env.JWTKEY, {
+					expiresIn: "1h"
+				});
+				res.status(200).json({jwt: jsontoken});
 			}
 		}
 	}
