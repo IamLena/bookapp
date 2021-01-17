@@ -1,5 +1,4 @@
 const mysql = require( 'mysql' );
-const dotenv = require('dotenv');
 
 class Database {
 	constructor() {
