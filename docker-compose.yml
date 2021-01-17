@@ -18,8 +18,6 @@ services:
       MYSQL_USER: my-app-user
       MYSQL_PASSWORD: my-app-password
       JWTKEY: qwe123
-    ports:
-      - "3257:3257"
     depends_on:
       - mysql
     restart: on-failure
