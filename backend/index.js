@@ -11,6 +11,7 @@ dotenv.config({path: './.env'});
 
 app.use('/', require('./routes'));
 
-app.listen(process.env.APP_PORT,  () => {
-	console.log(`backend is listening on port ${process.env.DATABASE_HOST}`);
+const port = process.env.APP_PORT || 5000;
+app.listen(port,  () => {
+	console.log(`backend is listening on port ${port}`);
 });

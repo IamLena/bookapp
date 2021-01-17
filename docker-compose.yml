@@ -1,21 +1,33 @@
-version: "3.8"
+version: '3'
+
 services:
-    backend:
-        build:
-            context: ./backend
-        ports:
-            - "5000:5000"
-    nginx:
-        restart: always
-        build:
-            context: ./nginx
-        ports:
-            - "80:80"
-    # db:
-    #     build: ./mysql
-    #     restart: always
-    #     environment:
-    #         MYSQL_ROOT_PASSWORD: root
-    #         MYSQL_DATABASE: bookappdb
-    #     ports:
-    #         - "3306:3306"
+  mysql:
+    build: ./mysql
+    environment:
+      MYSQL_DATABASE: bookappdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: my-app-user
+      MYSQL_PASSWORD: my-app-password
+      DATABASE_HOST: mysql
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: bookappdb
+      MYSQL_USER: my-app-user
+      MYSQL_PASSWORD: my-app-password
+      JWTKEY: qwe123
+    ports:
+      - "3257:3257"
+    depends_on:
+      - mysql
+    restart: on-failure
+  nginx:
+    build:
+        context: ./nginx
+    ports:
+        - "80:80"
+    depends_on:
+        - backend
+    restart: always

@@ -1,14 +1,7 @@
--- CREATE DATABASE bookappdb;
+CREATE USER 'my-app-user'@'localhost' IDENTIFIED BY 'my-app-password';
+GRANT ALL PRIVILEGES ON *.* TO 'my-app-user'@'localhost';
 
-CREATE USER root;
-SET PASSWORD FOR root = PASSWORD('root');
-GRANT ALL PRIVILEGES ON bookappdb.* TO root;
-FLUSH PRIVILEGES;
-
-USE bookappdb;
 DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` varchar(36) NOT NULL,
   `name` varchar(45) NOT NULL,

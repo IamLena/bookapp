@@ -1,6 +1,4 @@
-FROM mysql
+FROM mysql:5.7
 
-ENV MYSQL_DATABASE bookappdb
-ENV MYSQL_ROOT_PASSWORD root
-
-COPY init_db.sql /docker-entrypoint-initdb.d/
+# All scripts in docker-entrypoint-initdb.d/ are automatically executed during container startup
+COPY ./*.sql /docker-entrypoint-initdb.d/

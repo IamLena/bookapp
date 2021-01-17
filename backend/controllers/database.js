@@ -5,13 +5,9 @@ class Database {
 	constructor() {
 		this.connection = mysql.createConnection({
 			host		: process.env.DATABASE_HOST,
-			user		: process.env.DATABASE_USER,
-			password	: process.env.DATABASE_PASSWORD,
-			database	: process.env.DATABASE_NAME
-			// host		: "localhost",
-			// user		: "root",
-			// password	: "root",
-			// database	: "bookappdb"
+			user		: process.env.MYSQL_USER,
+			password	: process.env.MYSQL_PASSWORD,
+			database	: process.env.MYSQL_DATABASE
 		})
 	}
 	query( sql, args ) {

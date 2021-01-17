@@ -13,7 +13,6 @@ class User {
 
 exports.post = async (req, res) => {
 	const db = new Database();
-	console.log("db connected");
 	try {
 		console.log(req.body);
 		let {name, email, password, confirmedpassword} = req.body;
