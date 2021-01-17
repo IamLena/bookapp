@@ -4,7 +4,7 @@ const UserController = require('./controllers/users');
 // const BookController = require('./controllers/books');
 
 router.get('/', (req, res) => {
-	res.status(200).json(req.body);
+	res.status(200).send('Hello World!');
 });
 
 router.post('/users', UserController.post);
