@@ -1,7 +1,8 @@
-const bcrypt = require('bcryptjs')
-const {sign} = require("jsonwebtoken");
+const bcrypt  = require('bcryptjs')
+const {getToken} = require("../services/jwt");
 const {generateUuid} =  require('../services/database');
 const {getUserByEmail, createUser} = require('../services/users');
+const { use } = require('../routes');
 
 exports.post = async (req, res) => {
 	let {name, email, password, confirmedpassword} = req.body;
@@ -20,9 +21,7 @@ exports.post = async (req, res) => {
 				const uuid = await generateUuid();
 				password = await bcrypt.hash(password, 10);
 				await createUser(uuid, email, name, password);
-				const jsontoken  = sign({}, process.env.JWTKEY, {
-					expiresIn: "1h"
-				});
+				const jsontoken  = getToken(uuid);
 				res.status(200).json({jwt: jsontoken});
 			}
 		}
@@ -32,3 +31,30 @@ exports.post = async (req, res) => {
 		}
 	}
 };
+
+exports.login = async (req, res) => {
+	try {
+		let userWithEmail = await getUserByEmail(req.body.email);
+		if (!userWithEmail)
+		res.status(400).json({msg: "no user with this email"});
+		else
+		{
+			const validpassword = bcrypt.compareSync(req.body.password, userWithEmail.password);
+			if (validpassword)
+			{
+				const jsontoken  = getToken(userWithEmail.id);
+				res.status(200).json({jwt: jsontoken});
+			}
+			else
+				res.status(400).json({msg: "invalid password"});
+		}
+	}
+	catch(err) {
+		console.log(err)
+		res.status(500).send(err)
+	}
+}
+
+exports.logout = async (req, res) => {
+	res.send("i am out");
+}
