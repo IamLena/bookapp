@@ -106,7 +106,7 @@ paths:
       - in: query
         name: sort
         type: string
-        description: "popular fisrt or alphabetically"
+        description: "popular first or alphabetically"
       - in: query
         name: theme
         type: string

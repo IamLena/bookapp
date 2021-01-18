@@ -2,7 +2,6 @@ const bcrypt  = require('bcryptjs')
 const {getToken} = require("../services/jwt");
 const {generateUuid} =  require('../services/database');
 const {getUserByEmail, createUser} = require('../services/users');
-const { use } = require('../routes');
 
 exports.post = async (req, res) => {
 	let {name, email, password, confirmedpassword} = req.body;
