@@ -21,6 +21,7 @@ exports.post = async (req, res) => {
 				const uuid = await generateUuid();
 				password = await bcrypt.hash(password, 10);
 				await createUser(uuid, email, name, password);
+				req.session.user_id = uuid;
 				const jsontoken  = getToken(uuid);
 				res.status(200).json({jwt: jsontoken});
 			}
@@ -42,6 +43,7 @@ exports.login = async (req, res) => {
 			const validpassword = bcrypt.compareSync(req.body.password, userWithEmail.password);
 			if (validpassword)
 			{
+				req.session.user_id = userWithEmail.id;
 				const jsontoken  = getToken(userWithEmail.id);
 				res.status(200).json({jwt: jsontoken});
 			}
@@ -56,5 +58,5 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-	res.send("i am out");
+	res.send('i am out');
 }

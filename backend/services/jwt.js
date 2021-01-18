@@ -3,7 +3,7 @@ const {verify, sign} = require("jsonwebtoken");
 module.exports = {
 	getToken: (userid) => {
 		return sign({userid: userid}, process.env.JWTKEY, {
-			expiresIn: 20
+			expiresIn: 360
 		});
 	},
 	checkToken: (req, res, next) => {
@@ -12,9 +12,9 @@ module.exports = {
 			token = token.slice(7); // 'Bearer <token>'
 			verify(token, process.env.JWTKEY, (err, decoded) => {
 				if (err)
-					res.status(403).json({msg: "unauthorized user"});
+					res.status(403).json({msg: "expired token"});
 				else {
-					console.log(decoded);
+					req.session.user_id = undefined;
 					next();
 				}
 			})
