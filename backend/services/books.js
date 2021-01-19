@@ -8,9 +8,9 @@ module.exports = {
 			SELECT *
 			FROM (SELECT *
 				FROM books inner join authors
-				by books.author_id = authors.id)
+				on books.author_id = authors.id)
 			inner join themes
-			by books.theme_id = themes.id`;
+			on books.theme_id = themes.id`;
 			const books = await db.query(sql);
 			await db.close();
 			return books;
@@ -27,10 +27,10 @@ module.exports = {
 				SELECT *
 				FROM (SELECT *
 					FROM books inner join authors
-					by books.author_id = authors.id
+					on books.author_id = authors.id
 					where book.id = ${id})
 				inner join themes
-				by books.theme_id = themes.id`;
+				on books.theme_id = themes.id`;
 			const books = await db.query(sql);
 			await db.close();
 			let book = undefined;
@@ -50,10 +50,10 @@ module.exports = {
 			SELECT *
 			FROM (SELECT *
 				FROM books inner join authors
-				by books.author_id = authors.id
+				on books.author_id = authors.id
 				WHERE title like ${substr})
 			inner join themes
-			by books.theme_id = themes.id`
+			on books.theme_id = themes.id`
 			const books = await db.query(sql);
 			await db.close();
 			return books;
@@ -70,10 +70,10 @@ module.exports = {
 			SELECT *
 			FROM (SELECT *
 				FROM books inner join authors
-				by books.author_id = authors.id
+				on books.author_id = authors.id
 				WHERE author.name like ${substr})
 			inner join themes
-			by books.theme_id = themes.id`
+			on books.theme_id = themes.id`
 			const books = await db.query(sql);
 			await db.close();
 			return books;
@@ -90,9 +90,9 @@ module.exports = {
 			SELECT *
 			FROM (SELECT *
 				FROM books inner join authors
-				by books.author_id = authors.id)
+				on books.author_id = authors.id)
 			inner join themes
-			by books.theme_id = themes.id
+			on books.theme_id = themes.id
 			WHERE theme.name like ${substr}`
 			const books = await db.query(sql);
 			await db.close();
