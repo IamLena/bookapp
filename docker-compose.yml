@@ -13,11 +13,13 @@ services:
     build: ./backend
     environment:
       DATABASE_HOST: mysql
-      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
       MYSQL_DATABASE: bookappdb
-      MYSQL_USER: my-app-user
-      MYSQL_PASSWORD: my-app-password
+      MYSQL_PORT: 3306
       JWTKEY: qwe123
+      SESS_NAME: olololo
+      SESS_SECRET: asd321
     depends_on:
       - mysql
     restart: on-failure

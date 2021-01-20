@@ -19,10 +19,9 @@ router.get('/books/:id', BookController.getBooksById);
 router.post('/books/:status', BookController.addBookToStatus);
 router.delete('/books/:status/:book_id', BookController.removeBookFromStatus);
 
-//some problems here
+//some problems here /books/:status/:book_id called instead
 router.post('/books/:id/rating', BookController.addRating);
 router.patch('/books/:id/rating', BookController.changeRating);
 router.delete('/books/:id/rating', BookController.resetRating);
-
 
 module.exports = router;

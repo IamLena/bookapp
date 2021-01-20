@@ -94,7 +94,6 @@ exports.addBookToStatus = async (req, res) => {
 		}
 		const status_id = status_obj.id;
 		const books = await getUsersBooks(user_id, book_id);
-		console.log(books);
 		if (books.length == 0)
 			await addBookStatus(book_id, user_id, status_id);
 		else
@@ -109,6 +108,7 @@ exports.addBookToStatus = async (req, res) => {
 
 exports.removeBookFromStatus = async (req, res) => {
 	try {
+		console.log('hey');
 		const status = req.params.status;
 		if (!status)
 		{
@@ -130,7 +130,6 @@ exports.removeBookFromStatus = async (req, res) => {
 		}
 		const status_id = status_obj.id;
 		const books = await getUsersBooks(user_id, book_id);
-		console.log(books);
 		if (books.length != 0)
 			await updateBookStatus(book_id, user_id, 0);
 		res.status(201).json({"msg": `book removed from ${status} category`});
@@ -151,7 +150,6 @@ exports.addRating = async (req, res) => {
 		return;
 	}
 	const books = await getUsersBooks(user_id, book_id);
-	console.log(books);
 	if (books.length == 0)
 		await createRating(book_id, user_id, rating);
 	else
@@ -170,7 +168,6 @@ exports.changeRating = async (req, res) => {
 		return;
 	}
 	const books = await getUsersBooks(user_id, book_id);
-	console.log(books);
 	if (books.length != 0)
 		await updateRating(book_id, user_id, rating);
 	res.status(201).json({"msg": `book added to ${status}`});
@@ -185,7 +182,6 @@ exports.resetRating = async (req, res) => {
 		return;
 	}
 	const books = await getUsersBooks(user_id, book_id);
-	console.log(books);
 	if (books.length != 0)
 		await deleteRating(book_id, user_id);
 	res.status(201).json({"msg": `book added to ${status}`});
