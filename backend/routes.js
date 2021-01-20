@@ -22,7 +22,7 @@ router.get('/books', BookController.getAllBooks);
 // books/?favotire=true
 // books/?status=haveread
 // books/?mineonly=true (filter by user_id)
-// books/?theme=novel:search=subsrt
+// books/?theme=novel&search=subsrt
 
 router.get('/books/:id', BookController.getBooksById);
 // books/d290f1ee-6c54-4b01-90e6-d701748f0851

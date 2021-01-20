@@ -41,19 +41,74 @@ exports.createBook = async (req, res) => {
 }
 
 exports.getAllBooks = async (req, res) => {
+	console.log("query");
+	console.log(req.query);
+	let filters = {
+		start: parseInt(req.query.start),
+		stop : parseInt(req.query.stop),
+		themes : req.query.themes,
+		search : req.query.search,
+		status : req.query.status,
+		favorite : req.query.favorite,
+		mineonly : req.query.mineonly,
+		sortby : req.query.sortby
+	}
+	if (req.session.user_id) {
+		filters.mineonly = undefined;
+		filters.status = undefined;
+		filters.favorite = undefined;
+	}
+	const filterbooksfunc = (book) => {
+		if ((filters.mineonly && filters.mineonly != 'false') && !book.user_id)
+			return false;
+		if ((filters.favorite && filters.favorite != 'false') && !book.favorite)
+			return false;
+		if (filters.themes && !filters.themes.includes(book.theme))
+			return false;
+		if (filters.status && book.status != filters.status)
+			return false;
+		if (filters.search && !(book.title.includes(filters.search) || book.author.includes(filters.search)))
+			return false;
+		return true;
+	}
+	if (filters.themes)
+		filters.themes = filters.themes.split(',');
 	try {
-		// if (req.session.user_id)
-		// {
-		// 	const favfilter = req.query.favorites;
-		// }
-		const books = await getBooks();
+		let books = await getBooks();
+		books = books.filter(filterbooksfunc);
+		if (filters.sortby == 'alphabetically')
+			books = books.sort((a, b) => {return (a.title - b.title);});
+		else if (filters.sortby == 'bypopularity')
+			books = books.sort((a, b) => {return (b.rating - a.rating);});
+		if (filters.start && filters.stop)
+			books = books.slice(filters.start, filters.stop);
+		else if (filters.start)
+			books = books.slice(filters.start);
+		else if (filters.stop)
+			books = books.slice(0,filters.stop);
 		res.status(200).send(books);
 	}
-	catch(err) {
+	catch(err)
+	{
 		console.log(err);
-		res.status(500).send(err);
+		res.status(500).json({msg: "internal error"});
 	}
 }
+
+// exports.getAllBooks = async (req, res) => {
+// 	try {
+// 		// if (req.session.user_id)
+// 		// {
+// 		// 	const favfilter = req.query.favorites;
+// 		// }
+// 		const books = await getBooks();
+// 		res.status(200).send(books);
+// 	}
+// 	catch(err) {
+// 		console.log(err);
+// 		res.status(500).send(err);
+// 	}
+// }
 
 exports.getBooksById = async (req, res) => {
 	try {
