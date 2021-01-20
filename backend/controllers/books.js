@@ -93,7 +93,6 @@ exports.addBookToStatus = async (req, res) => {
 			return;
 		}
 		const status_id = status_obj.id;
-		console.log("hello");
 		const books = await getUsersBooks(user_id, book_id);
 		console.log(books);
 		if (books.length == 0)
@@ -106,4 +105,88 @@ exports.addBookToStatus = async (req, res) => {
 		console.log(err);
 		res.status(500).send(err);
 	}
+}
+
+exports.removeBookFromStatus = async (req, res) => {
+	try {
+		const status = req.params.status;
+		if (!status)
+		{
+			res.status(404).json({msg: "not found book status"});
+			return;
+		}
+		const status_obj = await getStatusByName(status);
+		if (!status_obj)
+		{
+			res.status(404).json({msg: "not found book status"});
+			return;
+		}
+		const user_id = req.session.user_id;
+		const book_id = req.params.book_id;
+		if (!user_id || !book_id)
+		{
+			res.status(400).json({msg: "book_id and user_id needed"});
+			return;
+		}
+		const status_id = status_obj.id;
+		const books = await getUsersBooks(user_id, book_id);
+		console.log(books);
+		if (books.length != 0)
+			await updateBookStatus(book_id, user_id, 0);
+		res.status(201).json({"msg": `book removed from ${status} category`});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(500).send(err);
+	}
+}
+
+exports.addRating = async (req, res) => {
+	const book_id = req.params.id;
+	const user_id = req.session.user_id;
+	const rating = req.body.rating;
+	if (!user_id || !book_id || !rating)
+	{
+		res.status(400).json({msg: "book_id, user_id and rating needed"});
+		return;
+	}
+	const books = await getUsersBooks(user_id, book_id);
+	console.log(books);
+	if (books.length == 0)
+		await createRating(book_id, user_id, rating);
+	else
+		await updateRating(book_id, user_id, rating);
+	res.status(201).json({"msg": `book added to ${status}`});
+}
+
+
+exports.changeRating = async (req, res) => {
+	const book_id = req.params.id;
+	const user_id = req.session.user_id;
+	const rating = req.body.rating;
+	if (!user_id || !book_id || !rating)
+	{
+		res.status(400).json({msg: "book_id, user_id and rating needed"});
+		return;
+	}
+	const books = await getUsersBooks(user_id, book_id);
+	console.log(books);
+	if (books.length != 0)
+		await updateRating(book_id, user_id, rating);
+	res.status(201).json({"msg": `book added to ${status}`});
+}
+
+exports.resetRating = async (req, res) => {
+	const book_id = req.params.id;
+	const user_id = req.session.user_id;
+	if (!user_id || !book_id || !rating)
+	{
+		res.status(400).json({msg: "book_id, user_id and rating needed"});
+		return;
+	}
+	const books = await getUsersBooks(user_id, book_id);
+	console.log(books);
+	if (books.length != 0)
+		await deleteRating(book_id, user_id);
+	res.status(201).json({"msg": `book added to ${status}`});
 }
