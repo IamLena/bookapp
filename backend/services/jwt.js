@@ -3,7 +3,7 @@ const {verify, sign} = require("jsonwebtoken");
 module.exports = {
 	getToken: (userid) => {
 		return sign({userid: userid}, process.env.JWTKEY, {
-			expiresIn: 360
+			expiresIn: "1h"
 		});
 	},
 	checkToken: (req, res, next) => {

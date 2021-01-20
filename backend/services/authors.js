@@ -17,7 +17,7 @@ module.exports = {
 	async getAuthorById(id) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM authors WHERE id = ?`, id;
+			sql = `SELECT * FROM authors WHERE id = '${id}'`;
 			const authors = await db.query(sql);
 			let author = undefined;
 			if (authors.length > 0)
@@ -33,7 +33,7 @@ module.exports = {
 	async getAuthorByName(name) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM authors WHERE name = ?`, name;
+			sql = `SELECT * FROM authors WHERE name = '${name}'`;
 			const authors = await db.query(sql);
 			let author = undefined;
 			if (authors.length > 0)
@@ -47,10 +47,10 @@ module.exports = {
 			throw err;
 		}
 	},
-	async getAuthorByNameLike(name) {
+	async getAuthorByNameLike(substr) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM authors WHERE name like ?`, name;
+			sql = `SELECT * FROM authors WHERE name like '${substr}'`;
 			const authors = await db.query(sql);
 			await db.close();
 			return authors;

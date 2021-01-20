@@ -4,7 +4,7 @@ module.exports = {
 	async getBookRating(book_id) {
 		const db = new Database();
 		try {
-			sql = `SELECT AVG(rating) FROM userbookinfo WHERE book_id = ? AND rating != 0`, book_id;
+			sql = `SELECT AVG(rating) FROM userbookinfo WHERE book_id = '${book_id}' AND rating != 0`;
 			const rating = await db.query(sql);
 			await db.close();
 			return rating;

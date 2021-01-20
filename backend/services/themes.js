@@ -17,7 +17,7 @@ module.exports = {
 	async getThemeById(id) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM themes WHERE id = ?`, id;
+			sql = `SELECT * FROM themes WHERE id = '${id}'`;
 			const themes = await db.query(sql);
 			let theme = undefined;
 			if (themes.length > 0)
@@ -33,7 +33,7 @@ module.exports = {
 	async getThemeByName(name) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM themes WHERE name = ?`, name;
+			sql = `SELECT * FROM themes WHERE name = '${name}'`;
 			const themes = await db.query(sql);
 			let theme = undefined;
 			if (themes.length > 0)
@@ -47,10 +47,10 @@ module.exports = {
 			throw err;
 		}
 	},
-	async getThemeByNameLike(name) {
+	async getThemeByNameLike(substr) {
 		const db = new Database();
 		try {
-			sql = `SELECT * FROM Themes WHERE name like ?`, name;
+			sql = `SELECT * FROM Themes WHERE name like '${substr}'`;
 			const themes = await db.query(sql);
 			await db.close();
 			return themes;

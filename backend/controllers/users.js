@@ -34,20 +34,26 @@ exports.post = async (req, res) => {
 
 exports.login = async (req, res) => {
 	try {
-		let userWithEmail = await getUserByEmail(req.body.email);
-		if (!userWithEmail)
-		res.status(400).json({msg: "no user with this email"});
+		const {email, password} = req.body;
+		if (!email || !password)
+			res.status(400).json({msg: "not all data provided"});
 		else
 		{
-			const validpassword = bcrypt.compareSync(req.body.password, userWithEmail.password);
-			if (validpassword)
-			{
-				req.session.user_id = userWithEmail.id;
-				const jsontoken  = getToken(userWithEmail.id);
-				res.status(200).json({jwt: jsontoken});
-			}
+			let userWithEmail = await getUserByEmail(email);
+			if (!userWithEmail)
+			res.status(400).json({msg: "no user with this email"});
 			else
-				res.status(400).json({msg: "invalid password"});
+			{
+				const validpassword = bcrypt.compareSync(password, userWithEmail.password);
+				if (validpassword)
+				{
+					req.session.user_id = userWithEmail.id;
+					const jsontoken  = getToken(userWithEmail.id);
+					res.status(200).json({jwt: jsontoken});
+				}
+				else
+					res.status(400).json({msg: "invalid password"});
+			}
 		}
 	}
 	catch(err) {
