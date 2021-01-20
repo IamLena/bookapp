@@ -42,6 +42,10 @@ exports.createBook = async (req, res) => {
 
 exports.getAllBooks = async (req, res) => {
 	try {
+		// if (req.session.user_id)
+		// {
+		// 	const favfilter = req.query.favorites;
+		// }
 		const books = await getBooks();
 		res.status(200).send(books);
 	}
@@ -154,7 +158,7 @@ exports.addRating = async (req, res) => {
 		await createRating(book_id, user_id, rating);
 	else
 		await updateRating(book_id, user_id, rating);
-	res.status(201).json({"msg": `book added to ${status}`});
+	res.status(201).json({"msg": `rating was set`});
 }
 
 
@@ -170,13 +174,13 @@ exports.changeRating = async (req, res) => {
 	const books = await getUsersBooks(user_id, book_id);
 	if (books.length != 0)
 		await updateRating(book_id, user_id, rating);
-	res.status(201).json({"msg": `book added to ${status}`});
+	res.status(201).json({"msg": `rating changed`});
 }
 
 exports.resetRating = async (req, res) => {
 	const book_id = req.params.id;
 	const user_id = req.session.user_id;
-	if (!user_id || !book_id || !rating)
+	if (!user_id || !book_id)
 	{
 		res.status(400).json({msg: "book_id, user_id and rating needed"});
 		return;
@@ -184,5 +188,5 @@ exports.resetRating = async (req, res) => {
 	const books = await getUsersBooks(user_id, book_id);
 	if (books.length != 0)
 		await deleteRating(book_id, user_id);
-	res.status(201).json({"msg": `book added to ${status}`});
+	res.status(201).json({"msg": `rating reseted`});
 }

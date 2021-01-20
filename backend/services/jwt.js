@@ -14,7 +14,7 @@ module.exports = {
 				if (err)
 					res.status(403).json({msg: "expired token"});
 				else {
-					req.session.user_id = undefined;
+					req.session.user_id = undefined; //decoded.id set into session user_id
 					next();
 				}
 			})
