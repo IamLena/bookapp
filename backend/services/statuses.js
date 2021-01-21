@@ -84,8 +84,7 @@ module.exports = {
 	async addFavoriteBook(user_id, book_id) {
 		const db = new Database();
 		try {
-			sql = `INSERT INTO userbookinfo(user_id, book_id, status_id, favorite, rating)
-			VALUES (?, ?, 0, 1, 0)`;
+			sql = "INSERT INTO userbookinfo(user_id, book_id, favorite, status_id, rating) VALUES (?, ?, 1, 0, 0)";
 			await db.query(sql, [user_id, book_id]);
 			await db.close();
 		}
@@ -98,7 +97,9 @@ module.exports = {
 		const db = new Database();
 		try {
 			sql = `UPDATE userbookinfo SET favorite = ? WHERE user_id = ? AND book_id = ?`;
-			await db.query(sql, [favorites, user_id, book_id]);
+			console.log(sql);
+			console.log(favorite, user_id, book_id);
+			await db.query(sql, [favorite, user_id, book_id]);
 			await db.close();
 		}
 		catch(err) {

@@ -33,14 +33,16 @@ router.post('/books', BookController.createBook); // for admins only
 router.post('/books/:id/rating', BookController.addRating);
 router.patch('/books/:id/rating', BookController.changeRating);
 router.delete('/books/:id/rating', BookController.resetRating);
+// books/d290f1ee-6c54-4b01-90e6-d701748f0851/rating
+
+// router.post('books/favorite', BookController.addBookToFavorite);
+// // books/favorite
+// router.delete('books/favorite/:book_id', BookController.removeBookFromFavorite);
+// // books/favorite/d290f1ee-6c54-4b01-90e6-d701748f0851
 
 router.post('/books/:status', BookController.addBookToStatus);
 // books/haveread
-// books/wanttoread
 router.delete('/books/:status/:book_id', BookController.removeBookFromStatus);
 // books/haveread/d290f1ee-6c54-4b01-90e6-d701748f0851
-
-// router.post('books/favorite', BookController.addBookToFavorite); // book_id via body
-// router.delete('books/favorite/:book_id', BookController.removeBookFromFavorite);
 
 module.exports = router;

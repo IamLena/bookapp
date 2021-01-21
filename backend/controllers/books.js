@@ -95,21 +95,6 @@ exports.getAllBooks = async (req, res) => {
 	}
 }
 
-// exports.getAllBooks = async (req, res) => {
-// 	try {
-// 		// if (req.session.user_id)
-// 		// {
-// 		// 	const favfilter = req.query.favorites;
-// 		// }
-// 		const books = await getBooks();
-// 		res.status(200).send(books);
-// 	}
-// 	catch(err) {
-// 		console.log(err);
-// 		res.status(500).send(err);
-// 	}
-// }
-
 exports.getBooksById = async (req, res) => {
 	try {
 		id = req.params.id;
@@ -130,7 +115,55 @@ exports.getBooksById = async (req, res) => {
 	}
 }
 
+addBookToFavorite = async (req, res) => {
+	console.log('addBookToFavorite');
+	try {
+		const user_id = req.session.user_id;
+		const book_id = req.body.book_id;
+		if (!user_id || !book_id)
+		{
+			res.status(400).json({msg: "book_id and user_id needed"});
+			return;
+		}
+		const books = await getUsersBooks(user_id, book_id);
+		if (books.length == 0)
+			await addFavoriteBook(book_id, user_id);
+		else if (!books[0].favorite)
+			await updateFavoriteBook(book_id, user_id, 1);
+		res.status(201).json({"msg": `book added to favorites`});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(500).send(err);
+	}
+}
+
+removeBookFromFavorite = async (req, res) => {
+	try {
+		const user_id = req.session.user_id;
+		const book_id = req.params.book_id;
+		if (!user_id || !book_id)
+		{
+			res.status(400).json({msg: "book_id and user_id needed"});
+			return;
+		}
+		const books = await getUsersBooks(user_id, book_id);
+		if (books.length != 0)
+			await updateFavoriteBook(book_id, user_id, 0);
+		res.status(201).json({"msg": `book removed from favorites`});
+	}
+	catch(err) {
+		console.log(err);
+		res.status(500).send(err);
+	}
+}
+
 exports.addBookToStatus = async (req, res) => {
+	if (req.params.status == 'favorite')
+	{
+		await addBookToFavorite(req, res);
+		return;
+	}
 	try {
 		const status = req.params.status;
 		if (!status)
@@ -166,8 +199,12 @@ exports.addBookToStatus = async (req, res) => {
 }
 
 exports.removeBookFromStatus = async (req, res) => {
+	if (req.params.status == 'favorite')
+	{
+		await removeBookFromFavorite(req, res);
+		return;
+	}
 	try {
-		console.log('hey');
 		const status = req.params.status;
 		if (!status)
 		{
