@@ -30,19 +30,6 @@ module.exports = {
 			throw err;
 		}
 	},
-	async getBooksOfStatus(user_id, status_id) {
-		const db = new Database();
-		try {
-			sql = `SELECT * FROM userbookinfo WHERE user_id = '${user_id}' AND status_id = ${status_id}`;
-			const books = await db.query(sql);
-			await db.close();
-			return books;
-		}
-		catch(err) {
-			await db.close();
-			throw err;
-		}
-	},
 	async addBookStatus(book_id, user_id, status_id) {
 		const db = new Database();
 		try {
@@ -62,19 +49,6 @@ module.exports = {
 			sql = `UPDATE userbookinfo SET status_id = ? WHERE user_id = ? AND book_id = ?`;
 			await db.query(sql, [status_id, user_id, book_id]);
 			await db.close();
-		}
-		catch(err) {
-			await db.close();
-			throw err;
-		}
-	},
-	async getFavoriteBooks(user_id) {
-		const db = new Database();
-		try {
-			sql = `SELECT * FROM userbookinfo INNER JOIN statuses WHERE user_id = ? AND favorite = 1`;
-			const books = await db.query(sql, user_id);
-			await db.close();
-			return books;
 		}
 		catch(err) {
 			await db.close();
