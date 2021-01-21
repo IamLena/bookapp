@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {checkToken} = require("./services/jwt");
+const {checkToken, setUser} = require("./services/jwt");
 const UserController = require('./controllers/users');
 const BookController = require('./controllers/books');
 const RatingController = require('./controllers/ratings');
@@ -20,9 +20,9 @@ router.post('/logout', checkToken, UserController.logout);
 // post /login
 // post /logout
 
-router.get('/books', BookController.getAllBooks);
-router.get('/books/:id', BookController.getBooksById);
-router.post('/books', BookController.createBook);
+router.get('/books', setUser, BookController.getAllBooks);
+router.get('/books/:id', setUser, BookController.getBooksById);
+router.post('/books', checkToken, BookController.createBook);
 
 // get /books
 // get /books/?start=0&stop=25
@@ -36,16 +36,16 @@ router.post('/books', BookController.createBook);
 // get /books/d290f1ee-6c54-4b01-90e6-d701748f0851
 // post /books
 
-router.post('/books/:id/rating', RatingController.addRating);
-router.patch('/books/:id/rating', RatingController.changeRating);
-router.delete('/books/:id/rating', RatingController.resetRating);
+router.post('/books/:id/rating', setUser, RatingController.addRating);
+router.patch('/books/:id/rating', setUser, RatingController.changeRating);
+router.delete('/books/:id/rating', setUser, RatingController.resetRating);
 
 // post /books/d290f1ee-6c54-4b01-90e6-d701748f0851/rating
 // patch /books/d290f1ee-6c54-4b01-90e6-d701748f0851/rating
 // delete /books/d290f1ee-6c54-4b01-90e6-d701748f0851/rating
 
-router.post('/books/:status', StatusController.addBookToStatus);
-router.delete('/books/:status/:book_id', StatusController.removeBookFromStatus);
+router.post('/books/:status', setUser, StatusController.addBookToStatus);
+router.delete('/books/:status/:book_id', setUser, StatusController.removeBookFromStatus);
 
 // post /books/haveread
 // post /books/wanttoread

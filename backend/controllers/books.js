@@ -100,7 +100,7 @@ exports.getAllBooks = async (req, res) => {
 			return true;
 		};
 
-		let books = await getBooks();
+		let books = await getBooks(req.session.user_id);
 		books = books.filter(filterbooksfunc);
 		books = sortbook(filters.sortby, books);
 		books = slicebooks(filters.start, filters.start, books);
@@ -121,7 +121,7 @@ exports.getBooksById = async (req, res) => {
 		return;
 	}
 	try {
-		const book = await getBookById(id);
+		const book = await getBookById(id, req.session.user_id);
 		if (!book)
 			res.status(404).json({msg: "book not found"});
 		else
