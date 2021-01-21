@@ -15,19 +15,17 @@ router.post('/logout', checkToken, UserController.logout);
 
 router.get('/books', BookController.getAllBooks);
 // books/
-// books/?start=0:stop=25 //limits
+// books/?start=0&stop=25
 // books/?sort=popular
 // books/?themes=novel more themes
 // books/?search=substr
 // books/?favotire=true
 // books/?status=haveread
-// books/?mineonly=true (filter by user_id)
+// books/?mineonly=true
 // books/?theme=novel&search=subsrt
 
 router.get('/books/:id', BookController.getBooksById);
 // books/d290f1ee-6c54-4b01-90e6-d701748f0851
-// if user authorized add status, favorites
-// add rating, myrating to return object
 
 router.post('/books', BookController.createBook); // for admins only
 // /books
