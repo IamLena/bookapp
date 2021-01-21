@@ -1,5 +1,7 @@
 const Database = require('./mysqlcon');
 
+//user_rating doesn't work
+// userbookinfo problem may be
 module.exports = {
 	async getBooks(user_id) {
 		const db = new Database();

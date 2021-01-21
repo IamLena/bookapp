@@ -1,4 +1,5 @@
 const {createRating, updateRating} = require('../services/ratings');
+const {getUsersBooks} = require('../services/statuses');
 
 exports.addRating = async (req, res) => {
 	const book_id = req.params.id;

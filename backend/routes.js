@@ -29,7 +29,7 @@ router.post('/books', BookController.createBook);
 // get /books/?sort=popular
 // get /books/?themes=novel more themes
 // get /books/?search=substr
-// get /books/?favotire=true
+// get /books/?favotire=true -> should be 403?
 // get /books/?status=haveread
 // get /books/?mineonly=true
 // get /books/?theme=novel&search=subsrt

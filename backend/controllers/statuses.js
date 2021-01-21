@@ -67,7 +67,8 @@ const addBookToReadStatus = async (req, res) => {
 			res.status(400).json({msg: "book_id and user_id needed"});
 			return;
 		}
-		const status_id = await getStatusId(req.params.status, res);
+		const status = req.params.status;
+		const status_id = await getStatusId(status, res);
 		if (status_id)
 		{
 			const books = await getUsersBooks(user_id, book_id);
@@ -87,13 +88,14 @@ const addBookToReadStatus = async (req, res) => {
 const removeBookFromReadStatus = async (req, res) => {
 	try {
 		const user_id = req.session.user_id;
-		const book_id = req.body.book_id;
+		const book_id = req.params.book_id;
 		if (!user_id || !book_id)
 		{
 			res.status(400).json({msg: "book_id and user_id needed"});
 			return;
 		}
-		const status_id = await getStatusId(req.params.status, res);
+		const status = req.params.status;
+		const status_id = await getStatusId(status, res);
 		if (status_id)
 		{
 			const books = await getUsersBooks(user_id, book_id);

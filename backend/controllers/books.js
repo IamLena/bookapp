@@ -53,6 +53,7 @@ const sortbook = (sortby, books) => {
 	return (books);
 }
 
+//doesn't work
 const slicebooks = (start, stop, books) => {
 	if (start && stop)
 		books = books.slice(start, stop);
