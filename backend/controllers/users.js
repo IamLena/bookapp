@@ -1,9 +1,9 @@
 const bcrypt  = require('bcryptjs')
 const {getToken} = require("../services/jwt");
 const {generateUuid} =  require('../services/database');
-const {getUserByEmail, createUser} = require('../services/users');
+const {getUserById, getUserByEmail, createUser, updateUser} = require('../services/users');
 
-exports.post = async (req, res) => {
+exports.addUser = async (req, res) => {
 	let {name, email, password, confirmedpassword} = req.body;
 	if (!name || !email || !password || !confirmedpassword)
 		res.status(400).json({msg: "not all data provided"});
@@ -31,6 +31,33 @@ exports.post = async (req, res) => {
 		}
 	}
 };
+
+exports.updatePassword = async (req, res) => {
+	let user_id = req.params.id;
+	let {password, confirmedpassword} = req.body;
+	if (!password || !confirmedpassword)
+		res.status(400).json({msg: "not all data provided"});
+	else if (password != confirmedpassword)
+		res.status(400).json({msg: "passwords do not match"});
+	else
+	{
+		try {
+			const userWithId = await getUserById(user_id);
+			if (!userWithId)
+				res.status(400).json({msg: "user not found"});
+			else
+			{
+				password = await bcrypt.hash(password, 10);
+				await updateUser(user_id, password);
+				res.status(201).json({msg: "password updated"});
+			}
+		}
+		catch(err) {
+			console.log(err)
+			res.status(500).send(err)
+		}
+	}
+}
 
 exports.login = async (req, res) => {
 	try {

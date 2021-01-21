@@ -8,8 +8,8 @@ router.get('/', (req, res) => {
 	res.status(200).send('Hello World!');
 });
 
-router.post('/users', UserController.post);
-//router.patch('/users/:id', UserController.updatepassword);
+router.post('/users', UserController.addUser);
+router.patch('/users/:id', UserController.updatePassword);
 router.post('/login', UserController.login);
 router.post('/logout', checkToken, UserController.logout);
 
