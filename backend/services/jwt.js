@@ -1,4 +1,4 @@
-const {verify, sign, decode} = require("jsonwebtoken");
+const {verify, sign} = require("jsonwebtoken");
 
 module.exports = {
 	getToken: (userid) => {
@@ -12,7 +12,7 @@ module.exports = {
 			token = token.slice(7); // 'Bearer <token>'
 			verify(token, process.env.JWTKEY, (err, decoded) => {
 				if (err)
-					res.status(403).json({msg: "expired token"});
+					res.status(401).json({msg: "expired token"});
 				else {
 					req.session.user_id = decoded.userid;
 					next();
@@ -20,7 +20,7 @@ module.exports = {
 			})
 		}
 		else {
-			res.status(403).json({msg: "unauthorized user"});
+			res.status(401).json({msg: "unauthorized user"});
 		}
 	},
 	setUser: (req, res, next) => {

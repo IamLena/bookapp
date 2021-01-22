@@ -60,5 +60,18 @@ module.exports = {
 		finally{
 			await db.close();
 		}
+	},
+	async getAdminRights(user_id) {
+		const db = new Database();
+		try {
+			const adminrightsrows = await db.query("SELECT adminrights FROM users WHERE id = ?", user_id);
+			if (adminrightsrows)
+			await db.close();
+				return adminrightsrows[0].adminrights;
+		}
+		catch(err) {
+			await db.close();
+			throw err;
+		}
 	}
 };

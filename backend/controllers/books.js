@@ -2,6 +2,7 @@ const {generateUuid} =  require('../services/database');
 const {getThemeByName, createTheme} = require('../services/themes');
 const {getAuthorByName, createAuthor} = require('../services/authors');
 const {getBooks, getBookById, createBook} = require('../services/books');
+const {getAdminRights} = require('../services/users');
 
 const getAuthorThemeids = async (author, theme) => {
 	const author_obj = await getAuthorByName(author);
@@ -65,6 +66,12 @@ const slicebooks = (start, stop, books) => {
 }
 
 exports.createBook = async (req, res) => {
+	const isadmin = await getAdminRights(req.session.user_id);
+	if (!isadmin)
+	{
+		res.status(403).json({msg: "not admin"});
+		return;
+	}
 	let {title, author, theme, annotation} = req.body;
 	if (!title || !author || !theme || !annotation)
 		res.status(400).json({msg: "not all data provided"});
