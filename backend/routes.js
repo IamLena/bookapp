@@ -7,11 +7,6 @@ const BookController = require('./controllers/books');
 const RatingController = require('./controllers/ratings');
 const StatusController = require('./controllers/statuses');
 
-router.get('/', (req, res) => {
-	res.status(200).sendFile(path.join(__dirname, '.', 'myswagger.yml'));
-	// res.status(200).send('Hello World!');
-});
-
 router.post('/users', UserController.addUser);
 router.patch('/users/:id', UserController.updatePassword);
 router.post('/login', UserController.login);
@@ -22,6 +17,15 @@ router.post('/logout', checkToken, UserController.logout);
 // post /login
 // post /logout
 
+/**
+ * This function comment is parsed by doctrine
+ * @route GET /api
+ * @group foo - Operations about user
+ * @param {string} email.query.required - username or email - eg: user@domain
+ * @param {string} password.query.required - user's password.
+ * @returns {object} 200 - An array of user info
+ * @returns {Error}  default - Unexpected error
+ */
 router.get('/books', setUser, BookController.getAllBooks);
 router.get('/books/:id', setUser, BookController.getBooksById);
 router.post('/books', checkToken, BookController.createBook);
