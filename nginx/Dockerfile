@@ -7,4 +7,5 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	-out /etc/ssl/certs/localhost.crt \
 	-subj "/C=RU/ST=Moscow/L=Moscow/O=42/OU=21/CN=localhost"
 RUN apt-get update && apt-get install -y nginx-extras
+# RUN chown nginx:nginx /var/cache/nginx
 COPY nginx.conf /etc/nginx/nginx.conf
