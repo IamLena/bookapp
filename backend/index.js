@@ -3,35 +3,30 @@ const dotenv = require('dotenv');
 const express = require('express');
 const session = require("express-session");
 const app = express();
-const expressSwagger = require('express-swagger-generator')(app);
-const options = {
-    swaggerDefinition: {
-        info: {
-            description: 'This is a sample server',
-            title: 'Swagger',
-            version: '1.0.0',
-        },
-        host: 'localhost:5000',
-        basePath: '/',
-        produces: [
-            "application/json",
-            "application/xml"
-        ],
-        schemes: ['http', 'https'],
-        securityDefinitions: {
-            JWT: {
-                type: 'apiKey',
-                in: 'header',
-                name: 'Authorization',
-                description: "",
-            }
-        }
-    },
-    basedir: __dirname, //app absolute path
-    files: ['./routes.js'] //Path to the API handle folder
+
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+// Extended: https://swagger.io/specification/#infoObject
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      version: "1.0.0",
+      title: "Customer API",
+      description: "Customer API Information",
+      contact: {
+        name: "Amazing Developer"
+      },
+      servers: ["http://localhost:80"]
+    }
+  },
+  // ['.routes/*.js']
+  apis: ["./routes.js"]
 };
 
-expressSwagger(options);
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded({extended : false}));
 app.use(express.json());
