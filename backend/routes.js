@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const {checkToken, setUser} = require("./services/jwt");
 const UserController = require('./controllers/users');
@@ -7,7 +8,8 @@ const RatingController = require('./controllers/ratings');
 const StatusController = require('./controllers/statuses');
 
 router.get('/', (req, res) => {
-	res.status(200).send('Hello World!');
+	res.status(200).sendFile(path.join(__dirname, '.', 'myswagger.yml'));
+	// res.status(200).send('Hello World!');
 });
 
 router.post('/users', UserController.addUser);
