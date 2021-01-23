@@ -5,9 +5,9 @@ const BookController = require('../controllers/books');
 const RatingController = require('../controllers/ratings');
 const StatusController = require('../controllers/statuses');
 
-router.get('', setUser, BookController.getAllBooks);
+router.get('/', setUser, BookController.getAllBooks);
 router.get('/:id', setUser, BookController.getBooksById);
-router.post('', checkToken, BookController.createBook);
+router.post('/', checkToken, BookController.createBook);
 
 // get /books
 // get /books/?start=0&stop=25

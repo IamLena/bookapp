@@ -174,33 +174,6 @@ paths:
           description: "book with that id is not found"
         500:
           description: "server error"
-    patch:
-      tags:
-      - admins
-      description: "change book info"
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: bookidorcategory
-        type: string
-        format: uuid
-        description: "book id"
-        required: true
-      - in: body
-        name: Book
-        description: "book info to change"
-        schema:
-          $ref: "#/definitions/Book"
-      responses:
-        201:
-          description: "book information is updated"
-        400:
-          description: "invalid data"
-        500:
-          description: "server error"
     post:
       tags:
       - authorized users

@@ -48,6 +48,43 @@ const UserController = require('../controllers/users');
  *        description: "server error"
  */
 router.post('/', UserController.addUser);
+
+/**
+ * @swagger
+ * /api/v1/users/{id}:
+ *  patch:
+ *    tags:
+ *    description: "registers the new user"
+ *    consumes:
+ *    - application/json
+ *    produces:
+ *    - application/json
+ *    parameters:
+ *    - in: path
+ *      name: id
+ *      description: "id of user which password to change"
+ *      type: string
+ *      format: uuid
+ *    - in: body
+ *      name: User
+ *      description: "new password to set"
+ *      schema:
+ *        type: object
+ *        properties:
+ *          password:
+ *            type: string
+ *            format: password
+ *          confirmedpassword:
+ *            type: string
+ *            format: password
+ *    responses:
+ *      201:
+ *        description: "password is changed"
+ *      400:
+ *        description: "invalid data"
+ *      500:
+ *        description: "server error"
+ */
 router.patch('/:id', UserController.updatePassword);
 
 module.exports = router;

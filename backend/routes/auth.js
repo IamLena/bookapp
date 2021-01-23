@@ -3,11 +3,70 @@ const router = express.Router();
 const {checkToken, setUser} = require("../services/jwt");
 const UserController = require('../controllers/users');
 
+
+/**
+ * @swagger
+ * /api/v1/sessions/login:
+ *  post:
+ *    tags:
+ *    - unauthorized users
+ *    description: "logins the user"
+ *    consumes:
+ *    - application/json
+ *    produces:
+ *    - application/json
+ *    parameters:
+ *    - in: body
+ *      name: User
+ *      description: "email and password of the user"
+ *      schema:
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *            format: email
+ *            example: vasya23@gmail.com
+ *          password:
+ *            type: string
+ *            format: password
+ *    responses:
+ *      200:
+ *        description: "user is authorized"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            jwt:
+ *              type: string
+ *      400:
+ *        description: "invalid data"
+ *      500:
+ *        description: "server error"
+ */
 router.post('/login', UserController.login);
+
+/**
+ * @swagger
+ * /api/v1/sessions/logout:
+ *  post:
+ *    tags:
+ *    - authorized users
+ *    description: "logouts the user"
+ *    consumes:
+ *    - application/json
+ *    produces:
+ *    - application/json
+ *    parameters:
+ *    - in: header
+ *      name: authorisation
+ *      type: string
+ *    responses:
+ *      201:
+ *        description: "user is loged out"
+ *      401:
+ *        description: "not authorized"
+ *      500:
+ *        description: "server error"
+ */
 router.post('/logout', checkToken, UserController.logout);
-// post /users
-// patch /users/a833229a-5b27-11eb-a89d-a0c58986b5c2
-// post /login
-// post /logout
 
 module.exports = router;
