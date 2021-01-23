@@ -90,5 +90,5 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-	res.send('i am out');
+	res.status(201);
 }

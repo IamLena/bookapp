@@ -38,7 +38,7 @@ const UserController = require('../controllers/users');
  *            jwt:
  *              type: string
  *      400:
- *        description: "invalid data"
+ *        description: "invalid data or taken email"
  *      500:
  *        description: "server error"
  */
@@ -57,7 +57,7 @@ router.post('/login', UserController.login);
  *    - application/json
  *    parameters:
  *    - in: header
- *      name: authorisation
+ *      name: authorization
  *      type: string
  *    responses:
  *      201:

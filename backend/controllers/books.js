@@ -3,6 +3,7 @@ const {getThemeByName, createTheme} = require('../services/themes');
 const {getAuthorByName, createAuthor} = require('../services/authors');
 const {getBooks, getBookById, createBook} = require('../services/books');
 const {getAdminRights} = require('../services/users');
+const { getStatusByName, getStatusById} = require('../services/statuses');
 
 const getAuthorThemeids = async (author, theme) => {
 	const author_obj = await getAuthorByName(author);
@@ -31,7 +32,7 @@ const getfiltersFromQuery = (req) => {
 		stop : parseInt(req.query.stop),
 		themes : req.query.themes,
 		search : req.query.search,
-		status : req.query.status,
+		status : parseInt(req.query.status),
 		favorite : req.query.favorite,
 		mineonly : req.query.mineonly,
 		sortby : req.query.sortby
@@ -94,13 +95,17 @@ exports.getAllBooks = async (req, res) => {
 	try {
 		let filters = getfiltersFromQuery(req);
 		const filterbooksfunc = (book) => {
+			console.log(req.session.user_id);
+			console.log(filters.mineonly);
+			console.log((filters.mineonly && filters.mineonly != 'false') && !book.user_id);
+			console.log(!book.user_id);
 			if ((filters.mineonly && filters.mineonly != 'false') && !book.user_id)
 				return false;
 			if ((filters.favorite && filters.favorite != 'false') && !book.favorite)
 				return false;
 			if (filters.themes && !filters.themes.includes(book.theme))
 				return false;
-			if (filters.status && book.status != filters.status)
+			if (filters.status && book.status_id != filters.status)
 				return false;
 			if (filters.search && !(book.title.includes(filters.search) || book.author.includes(filters.search)))
 				return false;

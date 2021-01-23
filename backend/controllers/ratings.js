@@ -10,6 +10,11 @@ exports.addRating = async (req, res) => {
 		res.status(400).json({msg: "book_id, user_id and rating needed"});
 		return;
 	}
+	if (rating <= 0 || rating > 5)
+	{
+		res.status(400).json({msg: "invalid rating"});
+		return;
+	}
 	const books = await getUsersBooks(user_id, book_id);
 	if (books.length == 0)
 		await createRating(book_id, user_id, rating);
@@ -25,6 +30,11 @@ exports.changeRating = async (req, res) => {
 	if (!user_id || !book_id || !rating)
 	{
 		res.status(400).json({msg: "book_id, user_id and rating needed"});
+		return;
+	}
+	if (rating <= 0 || rating > 5)
+	{
+		res.status(400).json({msg: "invalid rating"});
 		return;
 	}
 	const books = await getUsersBooks(user_id, book_id);

@@ -17,6 +17,22 @@ module.exports = {
 			throw err;
 		}
 	},
+	async getStatusById(id) {
+		const db = new Database();
+		try {
+			sql = `SELECT * FROM statuses WHERE id = '${id}'`;
+			const statuses = await db.query(sql);
+			let status = undefined;
+			if (statuses.length > 0)
+				status = statuses[0];
+			await db.close();
+			return status;
+		}
+		catch(err) {
+			await db.close();
+			throw err;
+		}
+	},
 	async getUsersBooks (user_id, book_id) {
 		const db = new Database();
 		try {
