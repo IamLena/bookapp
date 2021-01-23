@@ -23,6 +23,8 @@ services:
     depends_on:
       - mysql
     restart: on-failure
+    ports:
+      - "5000-5010:5000"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
