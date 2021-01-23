@@ -4,10 +4,12 @@ const express = require('express');
 const session = require("express-session");
 const app = express();
 
+const authrouter = require("./routes/auth");
+const booksrouter = require("./routes/books");
+
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-// Extended: https://swagger.io/specification/#infoObject
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
@@ -17,15 +19,13 @@ const swaggerOptions = {
       contact: {
         name: "Amazing Developer"
       },
-      servers: ["http://localhost:80"]
+      // servers: ["http://localhost:5000/"]
+      servers: ["http://localhost:80/api/v1"]
     }
   },
-  // ['.routes/*.js']
-  apis: ["./routes.js"]
+  apis: ["./routes/*.js"]
 };
-
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded({extended : false}));
@@ -41,7 +41,11 @@ app.use(session({
 	saveUninitialized: false,
 }));
 
-app.use('/', require('./routes'));
+app.use('/books', require("./routes/books"));
+app.use('/users', require("./routes/users"));
+app.use('/sessions/', require("./routes/auth"));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 
 const port = process.env.APP_PORT || 5000;
 app.listen(port,  () => {
